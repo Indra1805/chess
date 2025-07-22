@@ -307,8 +307,8 @@ function App() {
   const [captureHistory, setCaptureHistory] = useState([]);
   const [soundEnabled, setSoundEnabled] = useState(true);
 
-  const moveSound = new Audio(`${process.env.PUBLIC_URL}/sounds/move.mp3`);
-  const captureSound = new Audio(`${process.env.PUBLIC_URL}/sounds/capture.mp3`);
+  const moveSound = new Audio(`${process.env.PUBLIC_URL}/sounds/Move.mp3`);
+  const captureSound = new Audio(`${process.env.PUBLIC_URL}/sounds/Capture.mp3`);
   const checkSound = new Audio(`${process.env.PUBLIC_URL}/sounds/move-check.mp3`);
   const checkmateSound = new Audio(`${process.env.PUBLIC_URL}/sounds/game-end.mp3`);
 
