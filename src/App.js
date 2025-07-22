@@ -305,12 +305,12 @@ function App() {
   const [moveHistory, setMoveHistory] = useState([]);
   const [fenHistory, setFenHistory] = useState([]);
   const [captureHistory, setCaptureHistory] = useState([]);
-  const [isSoundOn, setIsSoundOn] = useState(true);
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
-  const moveSound = new Audio("/sounds/move.mp3");
-  const captureSound = new Audio("/sounds/capture.mp3");
-  const checkSound = new Audio("/sounds/move-check.mp3");
-  const checkmateSound = new Audio("/sounds/game-end.mp3");
+  const moveSound = new Audio(`${process.env.PUBLIC_URL}/sounds/move.mp3`);
+  const captureSound = new Audio(`${process.env.PUBLIC_URL}/sounds/capture.mp3`);
+  const checkSound = new Audio(`${process.env.PUBLIC_URL}/sounds/move-check.mp3`);
+  const checkmateSound = new Audio(`${process.env.PUBLIC_URL}/sounds/game-end.mp3`);
 
   const files = "abcdefgh";
   const getSquare = (row, col) => files[col] + (8 - row);
@@ -367,17 +367,17 @@ function App() {
               ? setCapturedWhite((prev) => [...prev, captured])
               : setCapturedBlack((prev) => [...prev, captured]);
 
-            if (isSoundOn) {
-              if (game.isCheckmate()) checkmateSound.play();
-              else if (game.inCheck()) checkSound.play();
-              else captureSound.play();
-            }
+            game.isCheckmate()
+              ? soundEnabled && checkmateSound.play()
+              : game.inCheck()
+              ? soundEnabled && checkSound.play()
+              : soundEnabled && captureSound.play();
           } else {
-            if (isSoundOn) {
-              if (game.isCheckmate()) checkmateSound.play();
-              else if (game.inCheck()) checkSound.play();
-              else moveSound.play();
-            }
+            game.isCheckmate()
+              ? soundEnabled && checkmateSound.play()
+              : game.inCheck()
+              ? soundEnabled && checkSound.play()
+              : soundEnabled && moveSound.play();
           }
 
           setMoveHistory((prev) => [...prev, move.san]);
@@ -446,7 +446,7 @@ function App() {
 
   const getPieceImage = (piece) => {
     if (!piece) return null;
-    return `/assets/pieces/${piece.color}${piece.type.toUpperCase()}.svg`;
+    return `${process.env.PUBLIC_URL}/assets/pieces/${piece.color}${piece.type.toUpperCase()}.svg`;
   };
 
   const renderCaptured = (pieces) =>
@@ -464,17 +464,16 @@ function App() {
       <h2 className="mb-0">Chess</h2>
       <i>Where Every Move Matters.</i>
 
-      <div className="form-check form-switch d-flex justify-content-center mt-3">
+      <div className="form-check form-switch mt-2">
         <input
           className="form-check-input"
           type="checkbox"
-          role="switch"
-          id="soundSwitch"
-          checked={isSoundOn}
-          onChange={() => setIsSoundOn(!isSoundOn)}
+          checked={soundEnabled}
+          onChange={() => setSoundEnabled(!soundEnabled)}
+          id="soundToggle"
         />
-        <label className="form-check-label ms-2" htmlFor="soundSwitch">
-          Sound {isSoundOn ? "On" : "Off"}
+        <label className="form-check-label" htmlFor="soundToggle">
+          Sound {soundEnabled ? "On" : "Off"}
         </label>
       </div>
 
@@ -583,7 +582,7 @@ function App() {
         <div className="d-flex flex-wrap justify-content-center">
           {moveHistory.map((move, i) => (
             <span key={i} className="m-1">
-              {`${i % 2 === 0 ? i / 2 + 1 + "." : ""} ${move}`}
+              {`${i % 2 === 0 ? Math.floor(i / 2) + 1 + "." : ""} ${move}`}
             </span>
           ))}
         </div>
