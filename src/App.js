@@ -288,8 +288,6 @@
 
 // export default App;
 
-
-
 import React, { useEffect, useState } from "react";
 import { Chess } from "chess.js";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -308,9 +306,15 @@ function App() {
   const [soundEnabled, setSoundEnabled] = useState(true);
 
   const moveSound = new Audio(`${process.env.PUBLIC_URL}/sounds/Move.mp3`);
-  const captureSound = new Audio(`${process.env.PUBLIC_URL}/sounds/Capture.mp3`);
-  const checkSound = new Audio(`${process.env.PUBLIC_URL}/sounds/move-check.mp3`);
-  const checkmateSound = new Audio(`${process.env.PUBLIC_URL}/sounds/game-end.mp3`);
+  const captureSound = new Audio(
+    `${process.env.PUBLIC_URL}/sounds/Capture.mp3`
+  );
+  const checkSound = new Audio(
+    `${process.env.PUBLIC_URL}/sounds/move-check.mp3`
+  );
+  const checkmateSound = new Audio(
+    `${process.env.PUBLIC_URL}/sounds/game-end.mp3`
+  );
 
   const files = "abcdefgh";
   const getSquare = (row, col) => files[col] + (8 - row);
@@ -319,9 +323,15 @@ function App() {
   useEffect(() => {
     const savedFen = localStorage.getItem("fen");
     const savedMoves = JSON.parse(localStorage.getItem("moveHistory") || "[]");
-    const savedCapturedWhite = JSON.parse(localStorage.getItem("capturedWhite") || "[]");
-    const savedCapturedBlack = JSON.parse(localStorage.getItem("capturedBlack") || "[]");
-    const savedCaptureHistory = JSON.parse(localStorage.getItem("captureHistory") || "[]");
+    const savedCapturedWhite = JSON.parse(
+      localStorage.getItem("capturedWhite") || "[]"
+    );
+    const savedCapturedBlack = JSON.parse(
+      localStorage.getItem("capturedBlack") || "[]"
+    );
+    const savedCaptureHistory = JSON.parse(
+      localStorage.getItem("captureHistory") || "[]"
+    );
 
     if (savedFen) {
       const loadedGame = new Chess(savedFen);
@@ -438,15 +448,19 @@ function App() {
   };
 
   const getStatus = (g) => {
-    if (g.isCheckmate()) return `Checkmate! ${g.turn() === "w" ? "Black" : "White"} wins.`;
+    if (g.isCheckmate())
+      return `Checkmate! ${g.turn() === "w" ? "Black" : "White"} wins.`;
     if (g.isDraw()) return "Draw!";
-    if (g.inCheck()) return `${g.turn() === "w" ? "White" : "Black"} is in check.`;
+    if (g.inCheck())
+      return `${g.turn() === "w" ? "White" : "Black"} is in check.`;
     return `${g.turn() === "w" ? "White" : "Black"} to move.`;
   };
 
   const getPieceImage = (piece) => {
     if (!piece) return null;
-    return `${process.env.PUBLIC_URL}/assets/pieces/${piece.color}${piece.type.toUpperCase()}.svg`;
+    return `${process.env.PUBLIC_URL}/assets/pieces/${
+      piece.color
+    }${piece.type.toUpperCase()}.svg`;
   };
 
   const renderCaptured = (pieces) =>
@@ -464,17 +478,19 @@ function App() {
       <h2 className="mb-0">Chess</h2>
       <i>Where Every Move Matters.</i>
 
-      <div className="form-check form-switch mt-2">
-        <input
-          className="form-check-input"
-          type="checkbox"
-          checked={soundEnabled}
-          onChange={() => setSoundEnabled(!soundEnabled)}
-          id="soundToggle"
-        />
-        <label className="form-check-label" htmlFor="soundToggle">
-          Sound {soundEnabled ? "On" : "Off"}
+      <div className="d-flex align-items-center justify-content-center gap-2 mt-2">
+        <label className="form-check-label mb-0" htmlFor="soundToggle">
+          <strong>Sound {soundEnabled ? "On" : "Off"}</strong>
         </label>
+        <div className="form-check form-switch m-0">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            checked={soundEnabled}
+            onChange={() => setSoundEnabled(!soundEnabled)}
+            id="soundToggle"
+          />
+        </div>
       </div>
 
       <div className="mt-1 mb-2">
@@ -482,7 +498,10 @@ function App() {
       </div>
 
       <div className="d-flex justify-content-center">
-        <div className="chess-board" style={{ display: "inline-block", position: "relative" }}>
+        <div
+          className="chess-board"
+          style={{ display: "inline-block", position: "relative" }}
+        >
           {board.map((row, rowIndex) => (
             <div className="d-flex" key={rowIndex}>
               {row.map((cell, colIndex) => {
@@ -539,7 +558,11 @@ function App() {
                       <img
                         src={getPieceImage(cell)}
                         alt=""
-                        style={{ width: "80%", height: "80%", transition: "transform 0.3s ease" }}
+                        style={{
+                          width: "80%",
+                          height: "80%",
+                          transition: "transform 0.3s ease",
+                        }}
                       />
                     )}
                     {!cell && isLegal && (
