@@ -13,11 +13,18 @@
 //   const [moveHistory, setMoveHistory] = useState([]);
 //   const [fenHistory, setFenHistory] = useState([]);
 //   const [captureHistory, setCaptureHistory] = useState([]);
+//   const [soundEnabled, setSoundEnabled] = useState(true);
 
-//   const moveSound = new Audio("/sounds/move.mp3");
-//   const captureSound = new Audio("/sounds/capture.mp3");
-//   const checkSound = new Audio("/sounds/move-check.mp3");
-//   const checkmateSound = new Audio("/sounds/game-end.mp3");
+//   const moveSound = new Audio(`${process.env.PUBLIC_URL}/sounds/Move.mp3`);
+//   const captureSound = new Audio(
+//     `${process.env.PUBLIC_URL}/sounds/Capture.mp3`
+//   );
+//   const checkSound = new Audio(
+//     `${process.env.PUBLIC_URL}/sounds/move-check.mp3`
+//   );
+//   const checkmateSound = new Audio(
+//     `${process.env.PUBLIC_URL}/sounds/game-end.mp3`
+//   );
 
 //   const files = "abcdefgh";
 //   const getSquare = (row, col) => files[col] + (8 - row);
@@ -26,9 +33,15 @@
 //   useEffect(() => {
 //     const savedFen = localStorage.getItem("fen");
 //     const savedMoves = JSON.parse(localStorage.getItem("moveHistory") || "[]");
-//     const savedCapturedWhite = JSON.parse(localStorage.getItem("capturedWhite") || "[]");
-//     const savedCapturedBlack = JSON.parse(localStorage.getItem("capturedBlack") || "[]");
-//     const savedCaptureHistory = JSON.parse(localStorage.getItem("captureHistory") || "[]");
+//     const savedCapturedWhite = JSON.parse(
+//       localStorage.getItem("capturedWhite") || "[]"
+//     );
+//     const savedCapturedBlack = JSON.parse(
+//       localStorage.getItem("capturedBlack") || "[]"
+//     );
+//     const savedCaptureHistory = JSON.parse(
+//       localStorage.getItem("captureHistory") || "[]"
+//     );
 
 //     if (savedFen) {
 //       const loadedGame = new Chess(savedFen);
@@ -75,16 +88,16 @@
 //               : setCapturedBlack((prev) => [...prev, captured]);
 
 //             game.isCheckmate()
-//               ? checkmateSound.play()
+//               ? soundEnabled && checkmateSound.play()
 //               : game.inCheck()
-//               ? checkSound.play()
-//               : captureSound.play();
+//               ? soundEnabled && checkSound.play()
+//               : soundEnabled && captureSound.play();
 //           } else {
 //             game.isCheckmate()
-//               ? checkmateSound.play()
+//               ? soundEnabled && checkmateSound.play()
 //               : game.inCheck()
-//               ? checkSound.play()
-//               : moveSound.play();
+//               ? soundEnabled && checkSound.play()
+//               : soundEnabled && moveSound.play();
 //           }
 
 //           setMoveHistory((prev) => [...prev, move.san]);
@@ -141,20 +154,23 @@
 //     setMoveHistory([]);
 //     setFenHistory([]);
 //     setCaptureHistory([]);
-
 //     localStorage.clear();
 //   };
 
 //   const getStatus = (g) => {
-//     if (g.isCheckmate()) return `Checkmate! ${g.turn() === "w" ? "Black" : "White"} wins.`;
+//     if (g.isCheckmate())
+//       return `Checkmate! ${g.turn() === "w" ? "Black" : "White"} wins.`;
 //     if (g.isDraw()) return "Draw!";
-//     if (g.inCheck()) return `${g.turn() === "w" ? "White" : "Black"} is in check.`;
+//     if (g.inCheck())
+//       return `${g.turn() === "w" ? "White" : "Black"} is in check.`;
 //     return `${g.turn() === "w" ? "White" : "Black"} to move.`;
 //   };
 
 //   const getPieceImage = (piece) => {
 //     if (!piece) return null;
-//     return `/assets/pieces/${piece.color}${piece.type.toUpperCase()}.svg`;
+//     return `${process.env.PUBLIC_URL}/assets/pieces/${
+//       piece.color
+//     }${piece.type.toUpperCase()}.svg`;
 //   };
 
 //   const renderCaptured = (pieces) =>
@@ -172,12 +188,30 @@
 //       <h2 className="mb-0">Chess</h2>
 //       <i>Where Every Move Matters.</i>
 
+//       <div className="d-flex align-items-center justify-content-center gap-2 mt-2">
+//         <label className="form-check-label mb-0" htmlFor="soundToggle">
+//           <strong>Sound {soundEnabled ? "On" : "Off"}</strong>
+//         </label>
+//         <div className="form-check form-switch m-0">
+//           <input
+//             className="form-check-input"
+//             type="checkbox"
+//             checked={soundEnabled}
+//             onChange={() => setSoundEnabled(!soundEnabled)}
+//             id="soundToggle"
+//           />
+//         </div>
+//       </div>
+
 //       <div className="mt-1 mb-2">
 //         <strong>Black Captured:</strong> {renderCaptured(capturedBlack)}
 //       </div>
 
 //       <div className="d-flex justify-content-center">
-//         <div className="chess-board" style={{ display: "inline-block", position: "relative" }}>
+//         <div
+//           className="chess-board"
+//           style={{ display: "inline-block", position: "relative" }}
+//         >
 //           {board.map((row, rowIndex) => (
 //             <div className="d-flex" key={rowIndex}>
 //               {row.map((cell, colIndex) => {
@@ -234,7 +268,11 @@
 //                       <img
 //                         src={getPieceImage(cell)}
 //                         alt=""
-//                         style={{ width: "80%", height: "80%", transition: "transform 0.3s ease" }}
+//                         style={{
+//                           width: "80%",
+//                           height: "80%",
+//                           transition: "transform 0.3s ease",
+//                         }}
 //                       />
 //                     )}
 //                     {!cell && isLegal && (
@@ -277,7 +315,7 @@
 //         <div className="d-flex flex-wrap justify-content-center">
 //           {moveHistory.map((move, i) => (
 //             <span key={i} className="m-1">
-//               {`${i % 2 === 0 ? i / 2 + 1 + "." : ""} ${move}`}
+//               {`${i % 2 === 0 ? Math.floor(i / 2) + 1 + "." : ""} ${move}`}
 //             </span>
 //           ))}
 //         </div>
@@ -287,6 +325,8 @@
 // }
 
 // export default App;
+
+
 
 import React, { useEffect, useState } from "react";
 import { Chess } from "chess.js";
@@ -306,15 +346,9 @@ function App() {
   const [soundEnabled, setSoundEnabled] = useState(true);
 
   const moveSound = new Audio(`${process.env.PUBLIC_URL}/sounds/Move.mp3`);
-  const captureSound = new Audio(
-    `${process.env.PUBLIC_URL}/sounds/Capture.mp3`
-  );
-  const checkSound = new Audio(
-    `${process.env.PUBLIC_URL}/sounds/move-check.mp3`
-  );
-  const checkmateSound = new Audio(
-    `${process.env.PUBLIC_URL}/sounds/game-end.mp3`
-  );
+  const captureSound = new Audio(`${process.env.PUBLIC_URL}/sounds/Capture.mp3`);
+  const checkSound = new Audio(`${process.env.PUBLIC_URL}/sounds/move-check.mp3`);
+  const checkmateSound = new Audio(`${process.env.PUBLIC_URL}/sounds/game-end.mp3`);
 
   const files = "abcdefgh";
   const getSquare = (row, col) => files[col] + (8 - row);
@@ -323,15 +357,10 @@ function App() {
   useEffect(() => {
     const savedFen = localStorage.getItem("fen");
     const savedMoves = JSON.parse(localStorage.getItem("moveHistory") || "[]");
-    const savedCapturedWhite = JSON.parse(
-      localStorage.getItem("capturedWhite") || "[]"
-    );
-    const savedCapturedBlack = JSON.parse(
-      localStorage.getItem("capturedBlack") || "[]"
-    );
-    const savedCaptureHistory = JSON.parse(
-      localStorage.getItem("captureHistory") || "[]"
-    );
+    const savedCapturedWhite = JSON.parse(localStorage.getItem("capturedWhite") || "[]");
+    const savedCapturedBlack = JSON.parse(localStorage.getItem("capturedBlack") || "[]");
+    const savedCaptureHistory = JSON.parse(localStorage.getItem("captureHistory") || "[]");
+    const savedFenHistory = JSON.parse(localStorage.getItem("fenHistory") || "[]");
 
     if (savedFen) {
       const loadedGame = new Chess(savedFen);
@@ -340,6 +369,7 @@ function App() {
       setCapturedWhite(savedCapturedWhite);
       setCapturedBlack(savedCapturedBlack);
       setCaptureHistory(savedCaptureHistory);
+      setFenHistory(savedFenHistory);
       setStatus(getStatus(loadedGame));
     }
   }, []);
@@ -350,7 +380,8 @@ function App() {
     localStorage.setItem("capturedWhite", JSON.stringify(capturedWhite));
     localStorage.setItem("capturedBlack", JSON.stringify(capturedBlack));
     localStorage.setItem("captureHistory", JSON.stringify(captureHistory));
-  }, [game, moveHistory, capturedWhite, capturedBlack, captureHistory]);
+    localStorage.setItem("fenHistory", JSON.stringify(fenHistory));
+  }, [game, moveHistory, capturedWhite, capturedBlack, captureHistory, fenHistory]);
 
   const handleClick = (row, col) => {
     const square = getSquare(row, col);
@@ -362,20 +393,19 @@ function App() {
         setLegalMoves([]);
         return;
       }
-
       if (legalMoves.includes(square)) {
         const captured = game.get(square);
         const prevFen = game.fen();
         const move = game.move({ from: selected, to: square, promotion: "q" });
 
         if (move) {
-          setFenHistory((prev) => [...prev, prevFen]);
-          setCaptureHistory((prev) => [...prev, captured || null]);
+          setFenHistory(prev => [...prev, prevFen]);
+          setCaptureHistory(prev => [...prev, captured || null]);
 
           if (captured) {
             captured.color === "w"
-              ? setCapturedWhite((prev) => [...prev, captured])
-              : setCapturedBlack((prev) => [...prev, captured]);
+              ? setCapturedWhite(prev => [...prev, captured])
+              : setCapturedBlack(prev => [...prev, captured]);
 
             game.isCheckmate()
               ? soundEnabled && checkmateSound.play()
@@ -390,7 +420,7 @@ function App() {
               : soundEnabled && moveSound.play();
           }
 
-          setMoveHistory((prev) => [...prev, move.san]);
+          setMoveHistory(prev => [...prev, move.san]);
           setGame(new Chess(game.fen()));
           setSelected(null);
           setLegalMoves([]);
@@ -398,7 +428,7 @@ function App() {
         }
       } else if (piece && piece.color === game.turn()) {
         setSelected(square);
-        const moves = game.moves({ square, verbose: true }).map((m) => m.to);
+        const moves = game.moves({ square, verbose: true }).map(m => m.to);
         setLegalMoves(moves);
       } else {
         setSelected(null);
@@ -406,7 +436,7 @@ function App() {
       }
     } else if (piece && piece.color === game.turn()) {
       setSelected(square);
-      const moves = game.moves({ square, verbose: true }).map((m) => m.to);
+      const moves = game.moves({ square, verbose: true }).map(m => m.to);
       setLegalMoves(moves);
     }
   };
@@ -416,19 +446,18 @@ function App() {
 
     const lastFen = fenHistory[fenHistory.length - 1];
     const lastCaptured = captureHistory[captureHistory.length - 1];
-
     const newGame = new Chess(lastFen);
 
     if (lastCaptured) {
       lastCaptured.color === "w"
-        ? setCapturedWhite((prev) => prev.slice(0, -1))
-        : setCapturedBlack((prev) => prev.slice(0, -1));
+        ? setCapturedWhite(prev => prev.slice(0, -1))
+        : setCapturedBlack(prev => prev.slice(0, -1));
     }
 
-    setCaptureHistory((prev) => prev.slice(0, -1));
     setGame(newGame);
-    setFenHistory((prev) => prev.slice(0, -1));
-    setMoveHistory((prev) => prev.slice(0, -1));
+    setFenHistory(prev => prev.slice(0, -1));
+    setMoveHistory(prev => prev.slice(0, -1));
+    setCaptureHistory(prev => prev.slice(0, -1));
     setSelected(null);
     setLegalMoves([]);
     setStatus(getStatus(newGame));
@@ -448,19 +477,15 @@ function App() {
   };
 
   const getStatus = (g) => {
-    if (g.isCheckmate())
-      return `Checkmate! ${g.turn() === "w" ? "Black" : "White"} wins.`;
+    if (g.isCheckmate()) return `Checkmate! ${g.turn() === "w" ? "Black" : "White"} wins.`;
     if (g.isDraw()) return "Draw!";
-    if (g.inCheck())
-      return `${g.turn() === "w" ? "White" : "Black"} is in check.`;
+    if (g.inCheck()) return `${g.turn() === "w" ? "White" : "Black"} is in check.`;
     return `${g.turn() === "w" ? "White" : "Black"} to move.`;
   };
 
   const getPieceImage = (piece) => {
     if (!piece) return null;
-    return `${process.env.PUBLIC_URL}/assets/pieces/${
-      piece.color
-    }${piece.type.toUpperCase()}.svg`;
+    return `${process.env.PUBLIC_URL}/assets/pieces/${piece.color}${piece.type.toUpperCase()}.svg`;
   };
 
   const renderCaptured = (pieces) =>
@@ -498,10 +523,7 @@ function App() {
       </div>
 
       <div className="d-flex justify-content-center">
-        <div
-          className="chess-board"
-          style={{ display: "inline-block", position: "relative" }}
-        >
+        <div className="chess-board" style={{ display: "inline-block", position: "relative" }}>
           {board.map((row, rowIndex) => (
             <div className="d-flex" key={rowIndex}>
               {row.map((cell, colIndex) => {
@@ -528,52 +550,24 @@ function App() {
                     }}
                   >
                     {rowIndex === 7 && (
-                      <div
-                        style={{
-                          position: "absolute",
-                          bottom: 2,
-                          left: 2,
-                          fontSize: "0.6rem",
-                          color: isDark ? "#fff" : "#000",
-                        }}
-                      >
+                      <div style={{ position: "absolute", bottom: 2, left: 2, fontSize: "0.6rem", color: isDark ? "#fff" : "#000" }}>
                         {files[colIndex]}
                       </div>
                     )}
                     {colIndex === 0 && (
-                      <div
-                        style={{
-                          position: "absolute",
-                          top: 2,
-                          left: 2,
-                          fontSize: "0.6rem",
-                          color: isDark ? "#fff" : "#000",
-                        }}
-                      >
+                      <div style={{ position: "absolute", top: 2, left: 2, fontSize: "0.6rem", color: isDark ? "#fff" : "#000" }}>
                         {8 - rowIndex}
                       </div>
                     )}
-
                     {cell && (
                       <img
                         src={getPieceImage(cell)}
                         alt=""
-                        style={{
-                          width: "80%",
-                          height: "80%",
-                          transition: "transform 0.3s ease",
-                        }}
+                        style={{ width: "80%", height: "80%", transition: "transform 0.3s ease" }}
                       />
                     )}
                     {!cell && isLegal && (
-                      <div
-                        style={{
-                          width: "20%",
-                          height: "20%",
-                          borderRadius: "50%",
-                          backgroundColor: "rgba(28, 31, 29, 0.5)",
-                        }}
-                      />
+                      <div style={{ width: "20%", height: "20%", borderRadius: "50%", backgroundColor: "rgba(28, 31, 29, 0.5)" }} />
                     )}
                   </div>
                 );
@@ -592,12 +586,8 @@ function App() {
       </div>
 
       <div className="mt-3 d-flex justify-content-center gap-2">
-        <button className="btn btn-danger" onClick={resetGame}>
-          Restart Game
-        </button>
-        <button className="btn btn-secondary" onClick={undoMove}>
-          Undo Move
-        </button>
+        <button className="btn btn-danger" onClick={resetGame}>Restart Game</button>
+        <button className="btn btn-secondary" onClick={undoMove}>Undo Move</button>
       </div>
 
       <div className="mt-4">
