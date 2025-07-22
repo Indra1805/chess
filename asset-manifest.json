@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/chess-app/static/css/main.da9105aa.css",
-    "main.js": "/chess-app/static/js/main.e9c3ad9d.js",
-    "static/js/453.c447a623.chunk.js": "/chess-app/static/js/453.c447a623.chunk.js",
-    "index.html": "/chess-app/index.html",
-    "main.da9105aa.css.map": "/chess-app/static/css/main.da9105aa.css.map",
-    "main.e9c3ad9d.js.map": "/chess-app/static/js/main.e9c3ad9d.js.map",
-    "453.c447a623.chunk.js.map": "/chess-app/static/js/453.c447a623.chunk.js.map"
+    "main.css": "/chess/static/css/main.da9105aa.css",
+    "main.js": "/chess/static/js/main.f67b2d21.js",
+    "static/js/453.c447a623.chunk.js": "/chess/static/js/453.c447a623.chunk.js",
+    "index.html": "/chess/index.html",
+    "main.da9105aa.css.map": "/chess/static/css/main.da9105aa.css.map",
+    "main.f67b2d21.js.map": "/chess/static/js/main.f67b2d21.js.map",
+    "453.c447a623.chunk.js.map": "/chess/static/js/453.c447a623.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.da9105aa.css",
-    "static/js/main.e9c3ad9d.js"
+    "static/js/main.f67b2d21.js"
   ]
 }
